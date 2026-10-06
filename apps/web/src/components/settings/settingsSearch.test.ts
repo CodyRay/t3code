@@ -149,6 +149,24 @@ describe("searchSettings", () => {
     });
   });
 
+  it("only offers Keep awake when the host exposes the control", () => {
+    const availability = {
+      hasCloudPublicConfig: false,
+      hasEnvironment: true,
+      hasProviderSettingsEnvironment: false,
+      hasMacProviderSettingsEnvironment: false,
+      canManageLocalBackend: true,
+      isWslSettingsRowVisible: false,
+      hasThreadAutoSettlement: false,
+    };
+    const visible = (hasSleepPrevention: boolean) =>
+      filterAvailableSettingsSearchItems({ ...availability, hasSleepPrevention }).some(
+        (item) => item.id === "keep-awake-for-remote-access",
+      );
+    expect(visible(false)).toBe(false);
+    expect(visible(true)).toBe(true);
+  });
+
   it("hides settings whose controls are unavailable", () => {
     const available = filterAvailableSettingsSearchItems({
       hasCloudPublicConfig: false,

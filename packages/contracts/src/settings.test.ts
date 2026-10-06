@@ -21,6 +21,20 @@ const decodeServerSettingsPatch = Schema.decodeUnknownSync(ServerSettingsPatch);
 const encodeServerSettings = Schema.encodeSync(ServerSettings);
 const decodeClaudeSettings = Schema.decodeUnknownSync(ClaudeSettings);
 
+describe("ServerSettings sleep prevention", () => {
+  it("keeps existing installations opt-in and persists the remote access control", () => {
+    const defaults = decodeServerSettings({});
+    expect(defaults.keepAwakeForRemoteAccess).toBe(false);
+    const input = { keepAwakeForRemoteAccess: true };
+    expect(encodeServerSettings(decodeServerSettings(input))).toMatchObject(input);
+    expect(decodeServerSettingsPatch(input)).toEqual(input);
+    expect(decodeServerSettingsPatch({ keepAwakeForRemoteAccess: false })).toEqual({
+      keepAwakeForRemoteAccess: false,
+    });
+    expect(() => decodeServerSettingsPatch({ keepAwakeForRemoteAccess: "true" })).toThrow();
+  });
+});
+
 describe("ServerSettings response streaming", () => {
   it("defaults to paragraph buffering", () => {
     expect(decodeServerSettings({}).responseStreamingMode).toBe("paragraph");

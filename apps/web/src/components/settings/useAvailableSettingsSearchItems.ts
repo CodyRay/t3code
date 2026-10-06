@@ -5,8 +5,9 @@ import { usePrimaryCloudLinkState } from "~/cloud/primaryCloudLinkState";
 import { hasCloudPublicConfig } from "~/cloud/publicConfig";
 import { isElectron } from "~/env";
 import { isLocalEnvironmentDisabled } from "~/localEnvironment";
+import { desktopNetworkAccessStateAtom } from "~/state/desktopNetworkAccess";
 import { desktopWslStateAtom } from "~/state/desktopWslState";
-import { useEnvironments } from "~/state/environments";
+import { useEnvironments, usePrimaryEnvironment } from "~/state/environments";
 import { useEnvironmentQuery } from "~/state/query";
 import { usePrimarySessionState } from "~/environments/primary";
 import { isWslSettingsRowVisible } from "./ConnectionsSettings.logic";
@@ -20,6 +21,7 @@ import {
 export function useAvailableSettingsSearchItems(scopeSearch: SettingsScopeSearch = {}) {
   const { environments } = useEnvironments();
   const primarySessionState = usePrimarySessionState();
+  const primaryEnvironment = usePrimaryEnvironment();
   const localEnvironmentDisabled = isLocalEnvironmentDisabled();
   const desktopWsl = useEnvironmentQuery(
     isElectron && !localEnvironmentDisabled ? desktopWslStateAtom : null,
@@ -34,6 +36,16 @@ export function useAvailableSettingsSearchItems(scopeSearch: SettingsScopeSearch
       ((primarySessionState.data?.authenticated &&
         primarySessionState.data.scopes?.includes(AuthAccessWriteScope)) ??
         false));
+
+  const desktopNetworkAccess = useEnvironmentQuery(
+    isElectron && canManageLocalBackend ? desktopNetworkAccessStateAtom : null,
+  );
+  const hasSleepPrevention =
+    canManageLocalBackend &&
+    primaryEnvironment?.serverConfig?.environment.capabilities.sleepPrevention === true &&
+    (isElectron
+      ? desktopNetworkAccess.data?.serverExposureState.mode === "network-accessible"
+      : primarySessionState.data?.auth.policy === "remote-reachable");
 
   return useMemo(
     () =>
@@ -58,6 +70,7 @@ export function useAvailableSettingsSearchItems(scopeSearch: SettingsScopeSearch
             }),
         ),
         canManageLocalBackend,
+        hasSleepPrevention,
         isWslSettingsRowVisible: isWslSettingsRowVisible({
           state: desktopWsl.data,
           error: desktopWsl.error,
@@ -69,6 +82,7 @@ export function useAvailableSettingsSearchItems(scopeSearch: SettingsScopeSearch
     [
       managedTunnelActive,
       canManageLocalBackend,
+      hasSleepPrevention,
       desktopWsl.data,
       desktopWsl.error,
       environments,

@@ -1,3 +1,4 @@
+import { KeepAwakeSetting } from "./KeepAwakeSetting";
 import {
   ChevronRightIcon,
   ChevronsLeftRightEllipsisIcon,
@@ -3546,6 +3547,15 @@ export function ConnectionsSettings() {
                     <span className="text-xs text-muted-foreground">Up to date</span>
                   ) : undefined
                 }
+              />
+            ) : null}
+            {canManageLocalBackend &&
+            isLocalBackendNetworkAccessible &&
+            primaryEnvironmentId &&
+            primaryServerConfig?.environment.capabilities.sleepPrevention ? (
+              <KeepAwakeSetting
+                environmentId={primaryEnvironmentId}
+                checked={primaryServerConfig.settings.keepAwakeForRemoteAccess}
               />
             ) : null}
             {canManageLocalBackend && desktopBridge ? (
