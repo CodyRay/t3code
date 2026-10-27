@@ -80,6 +80,7 @@ export const definition = defineSourceControl({
   checkoutCommand: ({ number }) => `cafe pr checkout ${number}`,
   changeRequestCloseCommand: /\bcafe\s+(?:pr|stack)\s+(?:merge|close)\b/u,
   authorProfileUrl: () => null,
+  hardLineBreaks: true,
   reviewSummaryRequired: () => false,
   checkoutCommandArgument: () => null,
   isChangeRequestReference: (url) => parsePullRequestUrl(url) !== null,

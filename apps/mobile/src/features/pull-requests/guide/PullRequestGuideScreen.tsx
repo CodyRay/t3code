@@ -182,7 +182,7 @@ export function PullRequestGuideStopScreen({ route }: StaticScreenProps<GuideSto
               <>
                 <GuideNotice state={state} />
                 <Text className="text-2xl leading-8 font-t3-semibold">{stop.title}</Text>
-                <PullRequestMarkdown markdown={stop.summary} />
+                <PullRequestMarkdown lineBreaks={false} markdown={stop.summary} />
                 {stop.attention ? (
                   <View className="gap-3 rounded-xl border border-border bg-grouped-card p-4">
                     <View className="flex-row items-center gap-2">
@@ -191,7 +191,7 @@ export function PullRequestGuideStopScreen({ route }: StaticScreenProps<GuideSto
                         {attentionLabels[stop.attention.kind]}
                       </Text>
                     </View>
-                    <PullRequestMarkdown markdown={stop.attention.note} />
+                    <PullRequestMarkdown lineBreaks={false} markdown={stop.attention.note} />
                   </View>
                 ) : null}
                 {stale ? (
@@ -231,7 +231,7 @@ export function PullRequestGuideStopScreen({ route }: StaticScreenProps<GuideSto
                           <Text className="text-xs text-foreground-muted">
                             {note.path.split("/").at(-1)}:{note.line}
                           </Text>
-                          <PullRequestMarkdown markdown={note.body} />
+                          <PullRequestMarkdown lineBreaks={false} markdown={note.body} />
                         </View>
                       </View>
                     ))}
@@ -260,7 +260,7 @@ export function PullRequestGuideStopScreen({ route }: StaticScreenProps<GuideSto
                   <View className="gap-3">
                     <Text className="font-t3-semibold">Questions to consider</Text>
                     {stop.questions.map((question) => (
-                      <PullRequestMarkdown key={question} markdown={question} />
+                      <PullRequestMarkdown key={question} lineBreaks={false} markdown={question} />
                     ))}
                   </View>
                 ) : null}
