@@ -48,7 +48,7 @@ export function PullRequestMarkdownRepository(props: {
     provider === undefined || url === undefined
       ? null
       : changeRequestReferenceAutolinker({ provider, url });
-  const lineBreaks = sourceControlClients.get(provider).hardLineBreaks ?? false;
+  const lineBreaks = sourceControlClients.find(provider ?? "")?.hardLineBreaks ?? false;
   const target = pullRequestTarget(props.params);
   const project = useProject({
     environmentId: target.environmentId,

@@ -241,7 +241,7 @@ function pullRequestMarkdownContext(
 ) {
   return {
     autolinks: changeRequestReferenceAutolinker(detail),
-    lineBreaks: sourceControlClients.get(detail?.provider).hardLineBreaks ?? false,
+    lineBreaks: sourceControlClients.find(detail?.provider ?? "")?.hardLineBreaks ?? false,
     threadRef,
   };
 }
